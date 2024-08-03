@@ -112,13 +112,13 @@ class DNNModel(object):
             opt = 'adam'
         else:
             if optimizer == 'adam':
-                opt = kr.optimizers.Adam(lr=lr, clipvalue=10000)
+                opt = kr.optimizers.Adam(learning_rate=lr, clipvalue=10000)
             if optimizer == 'RMSprop':
-                opt = kr.optimizers.RMSprop(lr=lr, clipvalue=10000)
+                opt = kr.optimizers.RMSprop(learning_rate=lr, clipvalue=10000)
             if optimizer == 'adagrad':
-                opt = kr.optimizers.Adagrad(lr=lr, clipvalue=10000)
+                opt = kr.optimizers.Adagrad(learning_rate=lr, clipvalue=10000)
             if optimizer == 'adadelta':
-                opt = kr.optimizers.Adadelta(lr=lr, clipvalue=10000)
+                opt = kr.optimizers.Adadelta(learning_rate=lr, clipvalue=10000)
 
         self.model.compile(loss=loss, optimizer=opt)
 
@@ -581,8 +581,8 @@ class DNN(object):
 
         # We define the new training dataset considering the last calibration_window years of data 
         df_train = df.loc[:next_day_date - pd.Timedelta(hours=1)]
-        df_train = df_train.loc[next_day_date - pd.Timedelta(hours=self.calibration_window * 364 * 24):]
-
+        df_train = df_train.loc[next_day_date - pd.Timedelta(hours=self.calibration_window * 24):]
+        
         # We define the test dataset as the next day (they day of interest) plus the last two weeks
         # in order to be able to build the necessary input features.
         df_test = df.loc[next_day_date - pd.Timedelta(weeks=2):, :]
@@ -678,8 +678,7 @@ def evaluate_dnn_in_test_dataset(experiment_id, path_datasets_folder=os.path.joi
         A dataframe with all the predictions in the test dataset. The dataframe is also
         written to the folder ``path_recalibration_folder``
     """
-
-
+    
     # Checking if provided directory for recalibration exists and if not create it
     if not os.path.exists(path_recalibration_folder):
         os.makedirs(path_recalibration_folder)
@@ -740,6 +739,7 @@ def evaluate_dnn_in_test_dataset(experiment_id, path_datasets_folder=os.path.joi
 
         # Recalibrating the model with the most up-to-date available data and making a prediction
         # for the next day
+        
         Yp = model.recalibrate_and_forecast_next_day(df=data_available, next_day_date=date)
 
         # Saving the current prediction
