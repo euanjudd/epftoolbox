@@ -129,7 +129,7 @@ def _hyperopt_objective(hyperparameters, trials, trials_file_path, max_evals, nl
     # Re-defining the training dataset based on the calibration window. The calibration window
     # can be given as an external parameter. If the value 0 is given, the calibration window
     # is included as a hyperparameter to optimize
-    dfTrain_cw = dfTrain.loc[dfTrain.index[-1] - pd.Timedelta(weeks=52) * calibration_window +
+    dfTrain_cw = dfTrain.loc[dfTrain.index[-1] - pd.Timedelta(days=calibration_window) + 
                              pd.Timedelta(hours=1):]
 
     # Saving hyperoptimization state and printing message
@@ -210,7 +210,7 @@ def _hyperopt_objective(hyperparameters, trials, trials_file_path, max_evals, nl
 def hyperparameter_optimizer(path_datasets_folder=os.path.join('.', 'datasets'), 
                              path_hyperparameters_folder=os.path.join('.', 'experimental_files'), 
                              new_hyperopt=1, max_evals=1500, nlayers=2, dataset='PJM', years_test=2, 
-                             calibration_window=4, shuffle_train=1, data_augmentation=0,
+                             calibration_window=4*365, shuffle_train=1, data_augmentation=0,
                              experiment_id=None, begin_test_date=None, end_test_date=None):
     
     """Function to optimize the hyperparameters and input features of the DNN. An example on how to 

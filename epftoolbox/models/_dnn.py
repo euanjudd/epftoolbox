@@ -340,7 +340,6 @@ class DNNModel(object):
 
         K.clear_session()
 
-
 class DNN(object):
 
     """DNN for electricity price forecasting. 
@@ -393,7 +392,7 @@ class DNN(object):
 
     def __init__(self, experiment_id, path_hyperparameter_folder=os.path.join('.', 'experimental_files'), 
                  nlayers=2, dataset='PJM', years_test=2, shuffle_train=1, data_augmentation=0, 
-                 calibration_window=4):
+                 calibration_window=4*365):
 
         # Checking if provided directories exist and if not raise exception
         self.path_hyperparameter_folder = path_hyperparameter_folder
@@ -609,7 +608,7 @@ def evaluate_dnn_in_test_dataset(experiment_id, path_datasets_folder=os.path.joi
                                  path_hyperparameter_folder=os.path.join('.', 'experimental_files'), 
                                  path_recalibration_folder=os.path.join('.', 'experimental_files'), 
                                  nlayers=2, dataset='PJM', years_test=2, shuffle_train=True, 
-                                 data_augmentation=0, calibration_window=4, new_recalibration=False, 
+                                 data_augmentation=0, calibration_window=4*365, new_recalibration=False, 
                                  begin_test_date=None, end_test_date=None):
     """Function for easy evaluation of the DNN model in a test dataset using daily recalibration. 
     
